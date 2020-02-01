@@ -12,7 +12,7 @@ const GLOOP_SHEET_PATHS = {'green':GLOOP_SHEET_PATHS_GREEN, 'purple':GLOOP_SHEET
 const GLOOP_TURNING = "./Sprites/Usables/glopTurn(green).png";
 const GLOOP_HOP_LEFT = "./Sprites/Usables/glopHopLeft(green).png";
 const GLOOP_HOP_RIGHT = "./Sprites/Usables/glopHopRight(green).png";
-const GLOOP_LOOK_FORWARD = "./Sprites/Usables/gloop(green).png";
+const GLOOP_LOOK_FORWARD = "./Sprites/Usables/gloop(purple).png";
 const DRILL_PROTO = "./Sprites/Usables/drillPrototype.png"
 const PLACEFORM_LIMIT = 6;
 // const GOD_MODE = true;//not implemented, use glitch jumps for now
@@ -30,7 +30,7 @@ function PlayerCharacterAMDownloads(AM) {
 NEW ANIMATION CLASS CONSTRUCTOR  */
 class PlayerCharacter extends Entity {
     constructor(game, AM) {
-        super(self, game, lowestGenformCoords[0], lowestGenformCoords[1] - 64);
+        super(self, game, 350, 100);//lowestGenformCoords[0], lowestGenformCoords[1] - 64);
         this.game = game;
         this.ctx = game.ctx;
         this.placeformManager = new PlaceformManager(game, AM, PLACEFORM_LIMIT);
@@ -96,7 +96,7 @@ class PlayerCharacter extends Entity {
                 this.jumping = false;
         }
         if (!this.jumping && !this.colliding) {
-            this.y += 1;
+            this.y += 5;
         }
 
 
@@ -153,54 +153,36 @@ class PlayerCharacter extends Entity {
             this.placeformManager.placeformPlace(this.facingLeft, false, this.x, this.y, 
                 this.moveLeftAnimation.frameWidth, this.moveLeftAnimation.frameHeight);
         }
-        if (this.attackDelay > 0)
-            this.attackDelay--;
-        if (this.game.attack && this.attackDelay <= 0) {
-            this.attackDelay = 50;
-            this.attacking = true;
-            this.currentAttackAnimation = this.attackAnimation;
-        }
-        if (this.attacking) {
-            if (this.currentAttackAnimation === 
-                this.attackAnimation && this.currentAttackAnimation.isDone()) {
-                this.attackAnimation.elapsedTime = 0;
-                this.currentAttackAnimation = this.reverseAttackAnimation;
-            } else if (this.currentAttackAnimation === 
-                this.reverseAttackAnimation && this.currentAttackAnimation.isDone()) {
-                this.reverseAttackAnimation.elapsedTime = 0;
-                this.attacking = false;
-            }
-        }
 
     }
     draw(ctx) {
-        let drawY = this.cameraTransform(); //this  is where we get transformed coordinates, drawY will be null if player is off screen
-        if (drawY) {
+        // let drawY = this.cameraTransform(); //this  is where we get transformed coordinates, drawY will be null if player is off screen
+        // if (drawY) {
             if (this.jumping && this.facingLeft) {
-                this.jumpLeftAnimation.drawFrame(this.game.clockTick, this.ctx, this.x, drawY);
+                this.jumpLeftAnimation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y);
             } else if (this.jumping && !this.facingLeft) {
-                this.jumpRightAnimation.drawFrame(this.game.clockTick, this.ctx, this.x, drawY);
+                this.jumpRightAnimation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y);
             } else if (this.movingLeft) {
-                this.moveLeftAnimation.drawFrame(this.game.clockTick, this.ctx, this.x, drawY);
+                this.moveLeftAnimation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y);
             } else if (this.movingRight) {
-                this.moveRightAnimation.drawFrame(this.game.clockTick, this.ctx, this.x, drawY);
+                this.moveRightAnimation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y);
             } else {
-                this.lookForwardAnimation.drawFrame(this.game.clockTick, this.ctx, this.x, drawY);
+                this.lookForwardAnimation.drawFrame(this.game.clockTick, this.ctx, this.x, this.y);
             }
             if (this.attacking) {
                 if (this.facingLeft) {
                     console.log("attack left");
                     this.ctx.scale(-1, 1);
-                    this.currentAttackAnimation.drawFrame(this.game.clockTick, this.ctx, -1 * this.x, drawY);
+                    this.currentAttackAnimation.drawFrame(this.game.clockTick, this.ctx, -1 * this.x, this.y);
                     this.ctx.restore();
                 } else {
                     console.log("attack right");
-                    this.currentAttackAnimation.drawFrame(this.game.clockTick, this.ctx, (this.x + this.lookForwardAnimation.frameWidth), drawY);
+                    this.currentAttackAnimation.drawFrame(this.game.clockTick, this.ctx, (this.x + this.lookForwardAnimation.frameWidth), this.y);
                 }
             }
             // this.placeformManager.placeformsDraw();
         }
-    }
+    // }
     checkCollisions() {
         isCharacterColliding(this);
     }

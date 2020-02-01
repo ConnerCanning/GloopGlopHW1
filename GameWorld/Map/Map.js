@@ -25,7 +25,7 @@ class Background {
             0, 0, this.game.surfaceWidth, this.game.surfaceHeight);
     }
     update() {
-        this.srcY -= this.game.camera.currentDrawOffset;
+        // this.srcY -= this.game.camera.currentDrawOffset;
         // if (this.srcY < 0) this.srcY = this.spritesheet.height - this.game.surfaceHeight;
     }
 };
@@ -65,15 +65,15 @@ class Floor {
         this.scale = scale;
     }
     draw() {
-        let drawY = this.cameraTransform(-40);
+        // let drawY = this.cameraTransform(-40);
         // console.log(drawY);
-        if(drawY) {
+        // if(drawY) {
             let width = this.srcWidthAndHeight[this.type][0];
             let height = this.srcWidthAndHeight[this.type][1];
             this.game.ctx.drawImage(this.spriteSheet, this.srcCoordinates[this.type][0], this.srcCoordinates[this.type][1], 
-                width, height, this.x, drawY, 
+                width, height, this.x, this.y, 
                 width * this.scale, height * this.scale);
-        }
+        // }
     }
 }
 //this function randomly generates genforms in groups per canvas height of the map
